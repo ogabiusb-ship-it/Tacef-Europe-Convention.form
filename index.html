@@ -197,33 +197,6 @@
             .label-text { display: block; width: 100%; }
             .signature-wrapper { flex-direction: column; align-items: flex-start; }
         }
-
-        /* ========================================================
-           STRICT PDF EXPORT OVERRIDES (Prevents Cropping Bug)
-           ======================================================== */
-        body.exporting-pdf {
-            display: block !important;
-            padding: 0 !important;
-            margin: 0 !important;
-            background-color: white !important;
-        }
-        body.exporting-pdf .form-container {
-            margin: 0 !important;
-            width: 800px !important;
-            max-width: 800px !important;
-            box-shadow: none !important;
-        }
-        body.exporting-pdf table { display: table !important; width: 100% !important; }
-        body.exporting-pdf tbody { display: table-row-group !important; }
-        body.exporting-pdf tr { display: table-row !important; }
-        body.exporting-pdf td { display: table-cell !important; width: 50% !important; border: 1px solid black !important; }
-        body.exporting-pdf .table-input, body.exporting-pdf .table-select, body.exporting-pdf .table-textarea, body.exporting-pdf .radio-group {
-            width: calc(100% - 125px) !important; 
-            float: right !important; 
-            margin-top: 0 !important; 
-        }
-        body.exporting-pdf .label-text { display: inline-block !important; width: 120px !important; }
-        body.exporting-pdf .signature-wrapper { flex-direction: row !important; align-items: center !important; }
     </style>
 </head>
 <body>
@@ -441,7 +414,7 @@
         ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
 
-    // --- BULLETPROOF PDF GENERATION CODE ---
+    // --- THE FIX: VIEWPORT OVERRIDE METHOD ---
     function generatePDF() {
         const element = document.getElementById('form-content');
         const btn = document.querySelector('.submit-btn');
@@ -449,19 +422,26 @@
         
         btn.innerText = "Generating PDF...";
 
-        // Step 1: Scroll to the absolute top of the page (fixes mobile scroll offsets)
+        // 1. Force the mobile phone to render the page as a desktop monitor temporarily
+        const viewportMeta = document.querySelector('meta[name="viewport"]');
+        viewportMeta.setAttribute('content', 'width=850');
+        
+        // 2. Scroll to absolute top left
         window.scrollTo(0, 0);
 
-        // Step 2: Apply a CSS class that forces a strict, non-centered desktop layout
-        document.body.classList.add('exporting-pdf');
+        // 3. Remove centering logic so it docks to the left
+        document.body.style.display = 'block';
+        document.body.style.margin = '0';
+        document.body.style.padding = '0';
+        element.style.margin = '0';
+        element.style.width = '800px';
+        element.style.maxWidth = '800px';
+        element.style.boxShadow = 'none';
 
-        // Step 3: Shrink input font sizes slightly so long text doesn't get cut off inside the boxes
+        // 4. Shrink inputs so nothing is cut off
         const allTextInputs = document.querySelectorAll('.table-input, .input-name, .table-select');
-        allTextInputs.forEach(input => {
-            input.style.fontSize = '11px'; 
-        });
+        allTextInputs.forEach(input => { input.style.fontSize = '11px'; });
 
-        // Step 4: PDF Configuration
         const opt = {
             margin:       0.3, 
             filename:     'Convention_Registration.pdf',
@@ -470,23 +450,30 @@
                 scale: 2, 
                 scrollX: 0,
                 scrollY: 0,
-                windowWidth: 800 // Hardcoded to match our CSS override width
+                windowWidth: 850 
             },
             jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' },
             pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
         };
 
-        // Step 5: Wait 100ms to ensure the browser draws the strict layout, then generate
+        // Wait a half second (500ms) for the phone screen to actually resize, then capture
         setTimeout(() => {
             html2pdf().set(opt).from(element).save().then(() => {
-                // Step 6: Restore everything back to normal for the user
-                document.body.classList.remove('exporting-pdf');
+                
+                // 5. Instantly change everything back to normal for the user
+                viewportMeta.setAttribute('content', 'width=device-width, initial-scale=1.0');
+                document.body.style.display = '';
+                document.body.style.margin = '';
+                document.body.style.padding = '';
+                element.style.margin = '';
+                element.style.width = '100%';
+                element.style.maxWidth = '850px';
+                element.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+                
+                allTextInputs.forEach(input => { input.style.fontSize = ''; });
                 btn.innerText = originalText;
-                allTextInputs.forEach(input => {
-                    input.style.fontSize = ''; 
-                });
             });
-        }, 100);
+        }, 500); 
     }
 </script>
 
