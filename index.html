@@ -5,10 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Convention Registration Commitment</title>
     
-    <!-- This is the library that turns the web page into a PDF -->
+    <!-- PDF Generation Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
+        /* ========================================================
+           BASE STYLES (Desktop & Tablet)
+           ======================================================== */
         body {
             font-family: Arial, sans-serif;
             background-color: #e5e5e5;
@@ -26,12 +29,12 @@
             box-sizing: border-box;
         }
 
-        /* --- PREVENT PAGE BREAK SLICING --- */
-        p, tr, .seminar-section, .header, h2 {
+        /* Prevent awkward page breaks in the PDF */
+        p, tr, .seminar-section, .header, h2, .signature-wrapper {
             page-break-inside: avoid;
         }
 
-        /* Header Styles */
+        /* Header */
         .header {
             background-color: #0000FF;
             color: white;
@@ -49,13 +52,12 @@
             font-weight: bold;
         }
 
-        /* Content Padding */
         .content {
             padding: 20px;
             color: #222;
         }
 
-        /* Typography & Headings */
+        /* Headings */
         h2.blue-heading {
             color: #0000FF;
             font-size: 18px;
@@ -77,13 +79,8 @@
             font-style: italic;
         }
 
-        /* Input Styles */
-        input[type="text"], 
-        input[type="date"], 
-        input[type="tel"], 
-        input[type="email"], 
-        select, 
-        textarea {
+        /* Inputs */
+        input[type="text"], input[type="date"], input[type="tel"], input[type="email"], select, textarea {
             background-color: #f7f7f7;
             border: 1px solid #bcbcbc;
             border-radius: 4px;
@@ -91,20 +88,12 @@
             font-size: 14px;
             color: #333;
             font-family: Arial, sans-serif;
-            transition: border-color 0.2s ease, background-color 0.2s ease;
             box-sizing: border-box;
         }
-
-        input:focus, select:focus, textarea:focus {
-            border-color: #839bc2;
-            background-color: #ffffff;
-            outline: none;
-        }
-
         .input-name { width: 300px; max-width: 100%; }
         .input-date { width: 140px; }
 
-        /* Table Styles */
+        /* Tables */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -118,11 +107,9 @@
             font-size: 14px;
             width: 50%;
         }
-        
         .table-input, .table-select, .table-textarea {
             width: calc(100% - 125px); 
             float: right;
-            box-sizing: border-box;
         }
         .table-textarea {
             height: 44px;
@@ -133,8 +120,6 @@
             width: 120px; 
             margin-top: 5px;
         }
-
-        /* Radio buttons inside table */
         .radio-group {
             display: inline-block;
             float: right;
@@ -142,10 +127,8 @@
             margin-top: 6px;
         }
 
-        /* Seminar Selection Section */
-        .seminar-section {
-            margin-bottom: 15px;
-        }
+        /* Seminars */
+        .seminar-section { margin-bottom: 15px; }
         .seminar-day {
             color: #FF0000;
             font-weight: bold;
@@ -163,29 +146,26 @@
             margin-right: 10px;
             margin-top: 4px;
             transform: scale(1.2);
-            cursor: pointer;
         }
 
-        /* Signature Section Layout */
+        /* Signature */
         .signature-wrapper {
             display: flex; 
             align-items: center; 
             margin-bottom: 10px; 
             margin-top: 15px; 
-            page-break-inside: avoid; 
             flex-wrap: wrap;
             gap: 10px;
         }
-
         #signature-pad {
             border: 1px solid #bcbcbc;
             border-radius: 4px;
             background-color: #f7f7f7;
             cursor: crosshair;
-            touch-action: none; /* Prevents scrolling while signing on mobile */
+            touch-action: none;
         }
 
-        /* Footer / Download Button */
+        /* Footer */
         .footer {
             background-color: #0000FF;
             text-align: center;
@@ -202,9 +182,6 @@
             cursor: pointer;
             border-radius: 4px;
         }
-        .submit-btn:hover {
-            background-color: #e0e0e0;
-        }
 
         /* ========================================================
            MOBILE RESPONSIVENESS (Phones & Small Tablets)
@@ -212,33 +189,41 @@
         @media (max-width: 768px) {
             body { padding: 10px; }
             .content { padding: 15px; }
-            
-            /* Stacks table columns vertically on small screens */
-            table, tbody, tr, td {
-                display: block;
-                width: 100%;
-            }
-            td { border-bottom: none; }
+            table, tbody, tr, td { display: block; width: 100%; }
+            td { border-bottom: none; width: 100% !important; }
             tr { border-bottom: 1px solid black; }
             tr:last-child { border-bottom: none; }
-
-            /* Fixes input sizing so they don't overflow on mobile */
-            .table-input, .table-select, .table-textarea, .radio-group {
-                width: 100%;
-                float: none;
-                margin-top: 5px;
-            }
-            .label-text {
-                display: block;
-                width: 100%;
-            }
-            
-            /* Signature layout for phones */
-            .signature-wrapper {
-                flex-direction: column;
-                align-items: flex-start;
-            }
+            .table-input, .table-select, .table-textarea, .radio-group { width: 100%; float: none; margin-top: 5px; }
+            .label-text { display: block; width: 100%; }
+            .signature-wrapper { flex-direction: column; align-items: flex-start; }
         }
+
+        /* ========================================================
+           STRICT PDF EXPORT OVERRIDES (Prevents Cropping Bug)
+           ======================================================== */
+        body.exporting-pdf {
+            display: block !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            background-color: white !important;
+        }
+        body.exporting-pdf .form-container {
+            margin: 0 !important;
+            width: 800px !important;
+            max-width: 800px !important;
+            box-shadow: none !important;
+        }
+        body.exporting-pdf table { display: table !important; width: 100% !important; }
+        body.exporting-pdf tbody { display: table-row-group !important; }
+        body.exporting-pdf tr { display: table-row !important; }
+        body.exporting-pdf td { display: table-cell !important; width: 50% !important; border: 1px solid black !important; }
+        body.exporting-pdf .table-input, body.exporting-pdf .table-select, body.exporting-pdf .table-textarea, body.exporting-pdf .radio-group {
+            width: calc(100% - 125px) !important; 
+            float: right !important; 
+            margin-top: 0 !important; 
+        }
+        body.exporting-pdf .label-text { display: inline-block !important; width: 120px !important; }
+        body.exporting-pdf .signature-wrapper { flex-direction: row !important; align-items: center !important; }
     </style>
 </head>
 <body>
@@ -437,58 +422,26 @@
         const rect = canvas.getBoundingClientRect();
         const clientX = event.clientX || (event.touches && event.touches[0].clientX);
         const clientY = event.clientY || (event.touches && event.touches[0].clientY);
-        
         return {
             x: (clientX - rect.left) * (canvas.width / rect.width),
             y: (clientY - rect.top) * (canvas.height / rect.height)
         };
     }
 
-    // Mouse Event Handlers (Laptops/Desktops)
-    canvas.addEventListener('mousedown', (e) => {
-        isDrawing = true;
-        const pos = getPosition(canvas, e);
-        ctx.beginPath();
-        ctx.moveTo(pos.x, pos.y);
-    });
-
-    canvas.addEventListener('mousemove', (e) => {
-        if (!isDrawing) return;
-        const pos = getPosition(canvas, e);
-        ctx.lineTo(pos.x, pos.y);
-        ctx.stroke();
-    });
-
+    canvas.addEventListener('mousedown', (e) => { isDrawing = true; const pos = getPosition(canvas, e); ctx.beginPath(); ctx.moveTo(pos.x, pos.y); });
+    canvas.addEventListener('mousemove', (e) => { if (!isDrawing) return; const pos = getPosition(canvas, e); ctx.lineTo(pos.x, pos.y); ctx.stroke(); });
     canvas.addEventListener('mouseup', () => isDrawing = false);
     canvas.addEventListener('mouseout', () => isDrawing = false);
 
-    // Touch Event Handlers (Phones & Touch Laptops)
-    canvas.addEventListener('touchstart', (e) => {
-        e.preventDefault(); // Stop screen from scrolling
-        isDrawing = true;
-        const pos = getPosition(canvas, e);
-        ctx.beginPath();
-        ctx.moveTo(pos.x, pos.y);
-    }, { passive: false });
-
-    canvas.addEventListener('touchmove', (e) => {
-        e.preventDefault(); // Stop screen from scrolling
-        if (!isDrawing) return;
-        const pos = getPosition(canvas, e);
-        ctx.lineTo(pos.x, pos.y);
-        ctx.stroke();
-    }, { passive: false });
-
-    canvas.addEventListener('touchend', (e) => {
-        e.preventDefault();
-        isDrawing = false;
-    }, { passive: false });
+    canvas.addEventListener('touchstart', (e) => { e.preventDefault(); isDrawing = true; const pos = getPosition(canvas, e); ctx.beginPath(); ctx.moveTo(pos.x, pos.y); }, { passive: false });
+    canvas.addEventListener('touchmove', (e) => { e.preventDefault(); if (!isDrawing) return; const pos = getPosition(canvas, e); ctx.lineTo(pos.x, pos.y); ctx.stroke(); }, { passive: false });
+    canvas.addEventListener('touchend', (e) => { e.preventDefault(); isDrawing = false; }, { passive: false });
 
     function clearSignature() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
 
-    // --- PDF GENERATION CODE ---
+    // --- BULLETPROOF PDF GENERATION CODE ---
     function generatePDF() {
         const element = document.getElementById('form-content');
         const btn = document.querySelector('.submit-btn');
@@ -496,42 +449,44 @@
         
         btn.innerText = "Generating PDF...";
 
-        // Temporarily change layout for proper PDF capturing
-        document.body.style.display = 'block';
-        element.style.margin = '0 auto'; 
-        element.style.boxShadow = 'none';
+        // Step 1: Scroll to the absolute top of the page (fixes mobile scroll offsets)
+        window.scrollTo(0, 0);
 
-        // Shrink text temporarily so long emails don't get cut off in the PDF
-        const allTextInputs = document.querySelectorAll('.table-input, .input-name');
+        // Step 2: Apply a CSS class that forces a strict, non-centered desktop layout
+        document.body.classList.add('exporting-pdf');
+
+        // Step 3: Shrink input font sizes slightly so long text doesn't get cut off inside the boxes
+        const allTextInputs = document.querySelectorAll('.table-input, .input-name, .table-select');
         allTextInputs.forEach(input => {
             input.style.fontSize = '11px'; 
         });
 
+        // Step 4: PDF Configuration
         const opt = {
             margin:       0.3, 
             filename:     'Convention_Registration.pdf',
             image:        { type: 'jpeg', quality: 1 },
             html2canvas:  { 
                 scale: 2, 
-                scrollY: 0,
                 scrollX: 0,
-                windowWidth: 850 // Forces Desktop view in PDF, even if downloaded on mobile
+                scrollY: 0,
+                windowWidth: 800 // Hardcoded to match our CSS override width
             },
             jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' },
             pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
         };
 
-        // Create the PDF
-        html2pdf().set(opt).from(element).save().then(() => {
-            // Restore normal look after downloading
-            btn.innerText = originalText;
-            document.body.style.display = 'flex';
-            element.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
-            
-            allTextInputs.forEach(input => {
-                input.style.fontSize = ''; 
+        // Step 5: Wait 100ms to ensure the browser draws the strict layout, then generate
+        setTimeout(() => {
+            html2pdf().set(opt).from(element).save().then(() => {
+                // Step 6: Restore everything back to normal for the user
+                document.body.classList.remove('exporting-pdf');
+                btn.innerText = originalText;
+                allTextInputs.forEach(input => {
+                    input.style.fontSize = ''; 
+                });
             });
-        });
+        }, 100);
     }
 </script>
 
