@@ -2,164 +2,224 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+
+    <!-- Makes the form responsive on phones, tablets and laptops -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Convention Registration Commitment</title>
-    
-    <!-- PDF Generation Library -->
+
+    <!-- PDF generation library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #e5e5e5;
-            display: flex; 
-            justify-content: center;
-            margin: 0;
-            padding: 10px;
-        }
-
-        /* Forces a strict desktop container width so mobile screens never clip the PDF */
-        .form-wrapper {
-            width: 850px;
-            min-width: 850px;
-        }
-
-        .form-container {
-            background-color: white;
-            width: 850px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        * {
             box-sizing: border-box;
         }
 
-        /* Prevent awkward page breaks in the PDF */
-        p, tr, .seminar-section, .header, h2, .signature-wrapper {
+        body {
+            margin: 0;
+            padding: 12px;
+            font-family: Arial, sans-serif;
+            background-color: #e5e5e5;
+            color: #222;
+        }
+
+        .form-wrapper {
+            width: 100%;
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        .form-container {
+            width: 100%;
+            background-color: #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+        }
+
+        p,
+        tr,
+        h2,
+        .header,
+        .seminar-section,
+        .signature-wrapper {
+            break-inside: avoid;
             page-break-inside: avoid;
         }
 
         /* Header */
+
         .header {
-            background-color: #0000FF;
-            color: white;
             padding: 20px;
+            color: white;
+            background-color: #0000ff;
         }
+
         .header h1 {
             margin: 0;
             font-size: 26px;
             font-weight: bold;
         }
+
         .header p {
             margin: 5px 0 0;
             font-size: 16px;
-            font-style: italic;
             font-weight: bold;
+            font-style: italic;
         }
 
         .content {
             padding: 20px;
-            color: #222;
         }
 
-        /* Headings */
-        h2.blue-heading {
-            color: #0000FF;
-            font-size: 18px;
-            margin-top: 20px;
-            margin-bottom: 10px;
-        }
-        h2.red-heading {
-            color: #FF0000;
-            font-size: 18px;
-            margin-top: 25px;
-            margin-bottom: 10px;
-        }
         p {
+            margin: 0 0 10px;
             line-height: 1.5;
-            margin-bottom: 10px;
         }
+
+        h2.blue-heading {
+            margin: 20px 0 10px;
+            color: #0000ff;
+            font-size: 18px;
+        }
+
+        h2.red-heading {
+            margin: 25px 0 10px;
+            color: #ff0000;
+            font-size: 18px;
+        }
+
         .bold-italic {
             font-weight: bold;
             font-style: italic;
         }
 
-        /* Inputs */
-        input[type="text"], input[type="date"], input[type="tel"], input[type="email"], select, textarea {
-            background-color: #f7f7f7;
+        /* Form fields */
+
+        input[type="text"],
+        input[type="date"],
+        input[type="tel"],
+        input[type="email"],
+        select,
+        textarea {
+            padding: 7px 8px;
             border: 1px solid #bcbcbc;
             border-radius: 4px;
-            padding: 6px 8px;
-            font-size: 14px;
+            background-color: #f7f7f7;
             color: #333;
             font-family: Arial, sans-serif;
-            box-sizing: border-box;
+            font-size: 14px;
         }
-        .input-name { width: 300px; }
-        .input-date { width: 140px; }
 
-        /* Tables */
+        .input-name {
+            width: 300px;
+            max-width: 100%;
+        }
+
+        .input-date {
+            width: 150px;
+            max-width: 100%;
+        }
+
+        /* Details table */
+
         table {
             width: 100%;
-            border-collapse: collapse;
-            border: 1.5px solid black;
             margin-bottom: 20px;
-        }
-        td {
-            border: 1px solid black;
-            padding: 10px;
-            vertical-align: middle;
-            font-size: 14px;
-            width: 50%;
-        }
-        .table-input, .table-select, .table-textarea {
-            width: calc(100% - 125px); 
-            float: right;
-        }
-        .table-textarea {
-            height: 44px;
-            resize: none;
-        }
-        .label-text {
-            display: inline-block;
-            width: 120px; 
-            margin-top: 5px;
-        }
-        .radio-group {
-            display: inline-block;
-            float: right;
-            width: calc(100% - 125px);
-            margin-top: 6px;
+            border: 1.5px solid black;
+            border-collapse: collapse;
         }
 
-        /* Seminars */
-        .seminar-section { margin-bottom: 15px; }
-        .seminar-day {
-            color: #FF0000;
-            font-weight: bold;
-            margin-top: 15px;
-            margin-bottom: 5px;
+        td {
+            width: 50%;
+            padding: 10px;
+            border: 1px solid black;
+            vertical-align: middle;
+            font-size: 14px;
         }
+
+        .field-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            width: 100%;
+        }
+
+        .label-text {
+            flex: 0 0 120px;
+            margin-top: 7px;
+        }
+
+        .table-input,
+        .table-select,
+        .table-textarea {
+            flex: 1;
+            min-width: 0;
+            width: 100%;
+        }
+
+        .table-textarea {
+            min-height: 50px;
+            resize: vertical;
+        }
+
+        .radio-group {
+            display: flex;
+            flex: 1;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding-top: 7px;
+        }
+
+        .radio-group label {
+            white-space: nowrap;
+        }
+
+        /* Seminar selections */
+
+        .seminar-section {
+            margin-bottom: 15px;
+        }
+
+        .seminar-day {
+            margin: 15px 0 7px;
+            color: #ff0000;
+            font-weight: bold;
+        }
+
         .seminar-option {
             display: flex;
             align-items: flex-start;
-            margin-bottom: 6px;
-            margin-left: 20px;
+            gap: 10px;
+            margin: 0 0 8px 20px;
             cursor: pointer;
         }
+
         .seminar-option input[type="radio"] {
-            margin-right: 10px;
+            flex-shrink: 0;
             margin-top: 4px;
             transform: scale(1.2);
         }
 
         /* Signature */
+
         .signature-wrapper {
-            display: flex; 
-            align-items: center; 
-            margin-bottom: 10px; 
-            margin-top: 15px; 
+            display: flex;
+            align-items: center;
             flex-wrap: wrap;
             gap: 10px;
+            margin: 15px 0 10px;
         }
+
+        .signature-canvas-wrapper {
+            width: 250px;
+            max-width: 100%;
+        }
+
         #signature-pad {
+            display: block;
+            width: 100%;
+            height: 80px;
             border: 1px solid #bcbcbc;
             border-radius: 4px;
             background-color: #f7f7f7;
@@ -167,272 +227,1021 @@
             touch-action: none;
         }
 
+        .clear-btn {
+            padding: 6px 10px;
+            border: 1px solid #bcbcbc;
+            border-radius: 4px;
+            background-color: #ffffff;
+            cursor: pointer;
+        }
+
         /* Footer */
+
         .footer {
-            background-color: #0000FF;
-            text-align: center;
             padding: 15px;
             margin-top: 20px;
+            background-color: #0000ff;
+            text-align: center;
         }
+
         .submit-btn {
+            padding: 11px 30px;
+            border: 1px solid #333;
+            border-radius: 4px;
             background-color: white;
             color: black;
-            border: 1px solid #333;
-            padding: 10px 30px;
             font-size: 16px;
             font-weight: bold;
             cursor: pointer;
-            border-radius: 4px;
+        }
+
+        .submit-btn:disabled {
+            cursor: wait;
+            opacity: 0.7;
+        }
+
+        /* Phone and tablet layout */
+
+        @media (max-width: 700px) {
+            body {
+                padding: 0;
+                background-color: #ffffff;
+            }
+
+            .form-container {
+                box-shadow: none;
+            }
+
+            .header,
+            .content,
+            .footer {
+                padding-left: 14px;
+                padding-right: 14px;
+            }
+
+            .header h1 {
+                font-size: 21px;
+            }
+
+            .header p {
+                font-size: 14px;
+            }
+
+            .input-name,
+            .input-date {
+                display: block;
+                width: 100%;
+                margin-top: 6px;
+            }
+
+            table,
+            tbody,
+            tr,
+            td {
+                display: block;
+                width: 100%;
+            }
+
+            tr {
+                border-bottom: 0;
+            }
+
+            td {
+                border-bottom: 0;
+            }
+
+            tr:last-child td:last-child {
+                border-bottom: 1px solid black;
+            }
+
+            .field-row {
+                display: block;
+            }
+
+            .label-text {
+                display: block;
+                width: 100%;
+                margin: 0 0 6px;
+            }
+
+            .table-input,
+            .table-select,
+            .table-textarea {
+                display: block;
+                width: 100%;
+            }
+
+            .radio-group {
+                width: 100%;
+                padding-top: 2px;
+            }
+
+            .signature-wrapper {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .signature-canvas-wrapper {
+                width: 100%;
+            }
+
+            #signature-pad {
+                width: 100%;
+                height: 110px;
+            }
+
+            .clear-btn,
+            .input-date {
+                width: 100%;
+            }
+
+            .seminar-option {
+                margin-left: 2px;
+            }
+
+            .submit-btn {
+                width: 100%;
+            }
+        }
+
+        /* PDF-only layout */
+
+        .pdf-mode {
+            width: 850px !important;
+            max-width: 850px !important;
+        }
+
+        .pdf-mode .form-container {
+            width: 850px !important;
+            max-width: 850px !important;
+            box-shadow: none;
+        }
+
+        .pdf-mode table {
+            display: table !important;
+        }
+
+        .pdf-mode tbody {
+            display: table-row-group !important;
+        }
+
+        .pdf-mode tr {
+            display: table-row !important;
+        }
+
+        .pdf-mode td {
+            display: table-cell !important;
+            width: 50% !important;
+        }
+
+        .pdf-mode .field-row {
+            display: flex !important;
+        }
+
+        .pdf-mode .label-text {
+            flex: 0 0 120px !important;
+            width: 120px !important;
+        }
+
+        .pdf-mode .signature-wrapper {
+            flex-direction: row !important;
+            align-items: center !important;
+        }
+
+        .pdf-mode .signature-canvas-wrapper {
+            width: 250px !important;
+        }
+
+        .pdf-mode #signature-pad {
+            width: 250px !important;
+            height: 80px !important;
         }
     </style>
 </head>
+
 <body>
 
-<div class="form-wrapper">
-  <div class="form-container" id="form-content">
-      
-      <!-- Header -->
-      <div class="header">
-          <h1>Convention Registration Commitment &ndash;</h1>
-          <p>Cut this section and share with your Fellowship Coordinator</p>
-      </div>
+<div class="form-wrapper" id="form-wrapper">
 
-      <!-- Main Content -->
-      <div class="content">
-          
-          <!-- Declaration Section -->
-          <h2 class="blue-heading">Declaration</h2>
-          <p>I, <input type="text" class="input-name" id="decl-name">, commit to preparing intentionally for Convention 2026.<br>
-          I agree to abide by all camp rules and to submit myself fully to the spiritual discipline required throughout the Convention. I come with a sincere heart, committing myself to become part of the revival army God is raising. I yield to His sure Word, the move of His Spirit, and every divine instruction that will cause dry bones to rise as an exceeding great army, as the Lord helps me, in Jesus' name.<br>
-          I confirm that I am an active TACEF member who consistently attends and serves in my local fellowship, or I am currently on youth service, or working outside my base, or married outside the ministry, and remain connected to the vision on a regular basis.</p>
-          
-          <!-- Signature Area -->
-          <div class="signature-wrapper">
-              <span>Signature:</span>
-              <canvas id="signature-pad" width="250" height="40"></canvas>
-              <button type="button" onclick="clearSignature()" data-html2canvas-ignore="true" style="padding: 4px 8px; font-size: 12px; cursor: pointer; border-radius: 4px; border: 1px solid #bcbcbc;">Clear</button>
-              <span style="margin-left: 10px;">Date:</span>
-              <input type="date" class="input-date">
-          </div>
-          
-          <p class="bold-italic">Where applicable, this declaration has been read and explained to me in my local language</p>
+    <div class="form-container" id="form-content">
 
-          <!-- Details to fill -->
-          <h2 class="red-heading">Details to fill</h2>
-          <table>
-              <tr>
-                  <td>
-                      <span class="label-text">&bull; Full Name</span> 
-                      <input type="text" class="table-input">
-                  </td>
-                  <td>
-                      <span class="label-text">&bull; Zone</span> 
-                      <input type="text" class="table-input">
-                  </td>
-              </tr>
-              <tr>
-                  <td>
-                      <span class="label-text">&bull; Gender</span> 
-                      <div class="radio-group">
-                          <label><input type="radio" name="gender" value="male"> Male</label>
-                          <label style="margin-left: 10px;"><input type="radio" name="gender" value="female"> Female</label>
-                      </div>
-                  </td>
-                  <td>
-                      <span class="label-text">&bull; Phone Number</span> 
-                      <input type="tel" class="table-input">
-                  </td>
-              </tr>
-              <tr>
-                  <td>
-                      <span class="label-text">&bull; Age Category:</span> 
-                      <select class="table-select">
-                          <option value="">Adult, Teen, or Child</option>
-                          <option value="adult">Adult</option>
-                          <option value="teen">Teen</option>
-                          <option value="child">Child</option>
-                      </select>
-                  </td>
-                  <td>
-                      <span class="label-text">&bull; Email Address <span style="font-size:12px;">(Optional)</span></span> 
-                      <input type="email" class="table-input">
-                  </td>
-              </tr>
-              <tr>
-                  <td>
-                      <span class="label-text">&bull; Manual Preference:</span> 
-                      <select class="table-select">
-                          <option value="">English / Yoruba / Seed of Purpose / Digital</option>
-                          <option value="english">English</option>
-                          <option value="yoruba">Yoruba</option>
-                          <option value="seed">Seed of Purpose</option>
-                          <option value="digital">Digital Copy</option>
-                      </select>
-                  </td>
-                  <td>
-                      <span class="label-text">&bull; Emergency Contact</span> 
-                      <input type="text" class="table-input">
-                  </td>
-              </tr>
-              <tr>
-                  <td>
-                      <span class="label-text">&bull; Fellowship Name</span> 
-                      <input type="text" class="table-input">
-                  </td>
-                  <td style="background-color: #f8f9fb;">
-                      <span class="label-text">&bull; Health Considerations<br><span style="font-size:12px; margin-left:10px;">(Optional)</span></span> 
-                      <textarea class="table-textarea" placeholder="(Optional)"></textarea>
-                  </td>
-              </tr>
-          </table>
+        <div class="header">
+            <h1>Convention Registration Commitment &ndash;</h1>
+            <p>Cut this section and share with your Fellowship Coordinator</p>
+        </div>
 
-          <!-- Seminar Selection -->
-          <div style="page-break-inside: avoid;">
-              <h2 class="blue-heading">Seminar Selection Framework</h2>
-              <p>Participants should prayerfully and honestly select seminars that address their most urgent spiritual and life needs.</p>
-              <p>Please use a pen to tick your preferred seminar for each of the three days. You can only select one seminar per day</p>
-          </div>
+        <div class="content">
 
-          <!-- Thursday -->
-          <div class="seminar-section">
-              <div class="seminar-day">Thursday: Discipleship Foundations</div>
-              <label class="seminar-option">
-                  <input type="radio" name="thursday">
-                  <span>Assurance of Salvation: What if I am not sure that I am truly born again?</span>
-              </label>
-              <label class="seminar-option">
-                  <input type="radio" name="thursday">
-                  <span>Building and maintaining a disciplined daily walk with God through consistent quiet time</span>
-              </label>
-              <label class="seminar-option">
-                  <input type="radio" name="thursday">
-                  <span>Becoming God's trusted discipler and builder of men</span>
-              </label>
-              <label class="seminar-option">
-                  <input type="radio" name="thursday">
-                  <span>Raising godly children through children's ministry and Sunday school outreach</span>
-              </label>
-              <label class="seminar-option">
-                  <input type="radio" name="thursday">
-                  <span>Turning the altar into a platform for sustained revival: a charge for clergy, evangelists, youth church coordinators and lay readers.</span>
-              </label>
-          </div>
+            <h2 class="blue-heading">Declaration</h2>
 
-          <!-- Friday -->
-          <div class="seminar-section">
-              <div class="seminar-day">Friday: Life, Career, and Personal Development</div>
-              <label class="seminar-option">
-                  <input type="radio" name="friday">
-                  <span>Knowing the will of God for life, career, and marriage</span>
-              </label>
-              <label class="seminar-option">
-                  <input type="radio" name="friday">
-                  <span>Pursuing academic excellence as a Christian student</span>
-              </label>
-              <label class="seminar-option">
-                  <input type="radio" name="friday">
-                  <span>Managing personal and family finances with godly wisdom</span>
-              </label>
-              <label class="seminar-option">
-                  <input type="radio" name="friday">
-                  <span>Growing in personal, professional, business, and career effectiveness</span>
-              </label>
-          </div>
+            <p>
+                I,
+                <input
+                    type="text"
+                    class="input-name"
+                    id="declaration-name"
+                    aria-label="Declaration name"
+                >,
+                commit to preparing intentionally for Convention 2026.
+                <br>
 
-          <!-- Saturday -->
-          <div class="seminar-section">
-              <div class="seminar-day">Saturday: Ministry and Service</div>
-              <label class="seminar-option">
-                  <input type="radio" name="saturday">
-                  <span>Standing as a revival intercessor in the local church</span>
-              </label>
-              <label class="seminar-option">
-                  <input type="radio" name="saturday">
-                  <span>Discovering and developing ministry gifts</span>
-              </label>
-              <label class="seminar-option">
-                  <input type="radio" name="saturday">
-                  <span>Managing church dynamics and administration with excellence</span>
-              </label>
-              <label class="seminar-option">
-                  <input type="radio" name="saturday">
-                  <span>Running an effective local fellowship with kingdom excellence</span>
-              </label>
-          </div>
+                I agree to abide by all camp rules and to submit myself fully
+                to the spiritual discipline required throughout the Convention.
+                I come with a sincere heart, committing myself to become part
+                of the revival army God is raising. I yield to His sure Word,
+                the move of His Spirit, and every divine instruction that will
+                cause dry bones to rise as an exceeding great army, as the Lord
+                helps me, in Jesus' name.
+                <br>
 
-      </div>
+                I confirm that I am an active TACEF member who consistently
+                attends and serves in my local fellowship, or I am currently
+                on youth service, or working outside my base, or married
+                outside the ministry, and remain connected to the vision on
+                a regular basis.
+            </p>
 
-      <!-- Footer Download Button -->
-      <div class="footer" data-html2canvas-ignore="true">
-          <button type="button" class="submit-btn" onclick="generatePDF()">Download as PDF</button>
-      </div>
+            <div class="signature-wrapper">
+                <span>Signature:</span>
 
-  </div>
+                <div class="signature-canvas-wrapper">
+                    <canvas
+                        id="signature-pad"
+                        width="500"
+                        height="160"
+                        aria-label="Signature pad"
+                    ></canvas>
+                </div>
+
+                <button
+                    type="button"
+                    class="clear-btn"
+                    onclick="clearSignature()"
+                    data-html2canvas-ignore="true"
+                >
+                    Clear signature
+                </button>
+
+                <span>Date:</span>
+
+                <input
+                    type="date"
+                    class="input-date"
+                    id="declaration-date"
+                    aria-label="Declaration date"
+                >
+            </div>
+
+            <p class="bold-italic">
+                Where applicable, this declaration has been read and explained
+                to me in my local language.
+            </p>
+
+            <h2 class="red-heading">Details to fill</h2>
+
+            <table>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="field-row">
+                                <label class="label-text" for="full-name">
+                                    &bull; Full Name
+                                </label>
+
+                                <input
+                                    type="text"
+                                    class="table-input"
+                                    id="full-name"
+                                >
+                            </div>
+                        </td>
+
+                        <td>
+                            <div class="field-row">
+                                <label class="label-text" for="zone">
+                                    &bull; Zone
+                                </label>
+
+                                <input
+                                    type="text"
+                                    class="table-input"
+                                    id="zone"
+                                >
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <div class="field-row">
+                                <span class="label-text">
+                                    &bull; Gender
+                                </span>
+
+                                <div class="radio-group">
+                                    <label>
+                                        <input
+                                            type="radio"
+                                            name="gender"
+                                            value="Male"
+                                        >
+                                        Male
+                                    </label>
+
+                                    <label>
+                                        <input
+                                            type="radio"
+                                            name="gender"
+                                            value="Female"
+                                        >
+                                        Female
+                                    </label>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td>
+                            <div class="field-row">
+                                <label class="label-text" for="phone-number">
+                                    &bull; Phone Number
+                                </label>
+
+                                <input
+                                    type="tel"
+                                    class="table-input"
+                                    id="phone-number"
+                                >
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <div class="field-row">
+                                <label class="label-text" for="age-category">
+                                    &bull; Age Category
+                                </label>
+
+                                <select
+                                    class="table-select"
+                                    id="age-category"
+                                >
+                                    <option value="">
+                                        Select age category
+                                    </option>
+                                    <option value="Adult">Adult</option>
+                                    <option value="Teen">Teen</option>
+                                    <option value="Child">Child</option>
+                                </select>
+                            </div>
+                        </td>
+
+                        <td>
+                            <div class="field-row">
+                                <label class="label-text" for="email-address">
+                                    &bull; Email Address
+                                    <small>(Optional)</small>
+                                </label>
+
+                                <input
+                                    type="email"
+                                    class="table-input"
+                                    id="email-address"
+                                >
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <div class="field-row">
+                                <label class="label-text" for="manual-preference">
+                                    &bull; Manual Preference
+                                </label>
+
+                                <select
+                                    class="table-select"
+                                    id="manual-preference"
+                                >
+                                    <option value="">
+                                        Select manual preference
+                                    </option>
+                                    <option value="English">English</option>
+                                    <option value="Yoruba">Yoruba</option>
+                                    <option value="Seed of Purpose">
+                                        Seed of Purpose
+                                    </option>
+                                    <option value="Digital Copy">
+                                        Digital Copy
+                                    </option>
+                                </select>
+                            </div>
+                        </td>
+
+                        <td>
+                            <div class="field-row">
+                                <label class="label-text" for="emergency-contact">
+                                    &bull; Emergency Contact
+                                </label>
+
+                                <input
+                                    type="text"
+                                    class="table-input"
+                                    id="emergency-contact"
+                                >
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <div class="field-row">
+                                <label class="label-text" for="fellowship-name">
+                                    &bull; Fellowship Name
+                                </label>
+
+                                <input
+                                    type="text"
+                                    class="table-input"
+                                    id="fellowship-name"
+                                >
+                            </div>
+                        </td>
+
+                        <td style="background-color: #f8f9fb;">
+                            <div class="field-row">
+                                <label
+                                    class="label-text"
+                                    for="health-considerations"
+                                >
+                                    &bull; Health Considerations
+                                    <small>(Optional)</small>
+                                </label>
+
+                                <textarea
+                                    class="table-textarea"
+                                    id="health-considerations"
+                                    placeholder="Optional"
+                                ></textarea>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div>
+                <h2 class="blue-heading">
+                    Seminar Selection Framework
+                </h2>
+
+                <p>
+                    Participants should prayerfully and honestly select
+                    seminars that address their most urgent spiritual and
+                    life needs.
+                </p>
+
+                <p>
+                    Please select one preferred seminar for each of the
+                    three days.
+                </p>
+            </div>
+
+            <div class="seminar-section">
+                <div class="seminar-day">
+                    Thursday: Discipleship Foundations
+                </div>
+
+                <label class="seminar-option">
+                    <input
+                        type="radio"
+                        name="thursday"
+                        value="Assurance of Salvation"
+                    >
+                    <span>
+                        Assurance of Salvation: What if I am not sure that
+                        I am truly born again?
+                    </span>
+                </label>
+
+                <label class="seminar-option">
+                    <input
+                        type="radio"
+                        name="thursday"
+                        value="Daily walk with God"
+                    >
+                    <span>
+                        Building and maintaining a disciplined daily walk
+                        with God through consistent quiet time
+                    </span>
+                </label>
+
+                <label class="seminar-option">
+                    <input
+                        type="radio"
+                        name="thursday"
+                        value="Trusted discipler"
+                    >
+                    <span>
+                        Becoming God's trusted discipler and builder of men
+                    </span>
+                </label>
+
+                <label class="seminar-option">
+                    <input
+                        type="radio"
+                        name="thursday"
+                        value="Godly children"
+                    >
+                    <span>
+                        Raising godly children through children's ministry
+                        and Sunday school outreach
+                    </span>
+                </label>
+
+                <label class="seminar-option">
+                    <input
+                        type="radio"
+                        name="thursday"
+                        value="Sustained revival"
+                    >
+                    <span>
+                        Turning the altar into a platform for sustained
+                        revival: a charge for clergy, evangelists, youth
+                        church coordinators and lay readers.
+                    </span>
+                </label>
+            </div>
+
+            <div class="seminar-section">
+                <div class="seminar-day">
+                    Friday: Life, Career, and Personal Development
+                </div>
+
+                <label class="seminar-option">
+                    <input
+                        type="radio"
+                        name="friday"
+                        value="Will of God"
+                    >
+                    <span>
+                        Knowing the will of God for life, career, and marriage
+                    </span>
+                </label>
+
+                <label class="seminar-option">
+                    <input
+                        type="radio"
+                        name="friday"
+                        value="Academic excellence"
+                    >
+                    <span>
+                        Pursuing academic excellence as a Christian student
+                    </span>
+                </label>
+
+                <label class="seminar-option">
+                    <input
+                        type="radio"
+                        name="friday"
+                        value="Godly finances"
+                    >
+                    <span>
+                        Managing personal and family finances with godly wisdom
+                    </span>
+                </label>
+
+                <label class="seminar-option">
+                    <input
+                        type="radio"
+                        name="friday"
+                        value="Career effectiveness"
+                    >
+                    <span>
+                        Growing in personal, professional, business, and
+                        career effectiveness
+                    </span>
+                </label>
+            </div>
+
+            <div class="seminar-section">
+                <div class="seminar-day">
+                    Saturday: Ministry and Service
+                </div>
+
+                <label class="seminar-option">
+                    <input
+                        type="radio"
+                        name="saturday"
+                        value="Revival intercessor"
+                    >
+                    <span>
+                        Standing as a revival intercessor in the local church
+                    </span>
+                </label>
+
+                <label class="seminar-option">
+                    <input
+                        type="radio"
+                        name="saturday"
+                        value="Ministry gifts"
+                    >
+                    <span>
+                        Discovering and developing ministry gifts
+                    </span>
+                </label>
+
+                <label class="seminar-option">
+                    <input
+                        type="radio"
+                        name="saturday"
+                        value="Church administration"
+                    >
+                    <span>
+                        Managing church dynamics and administration with
+                        excellence
+                    </span>
+                </label>
+
+                <label class="seminar-option">
+                    <input
+                        type="radio"
+                        name="saturday"
+                        value="Local fellowship"
+                    >
+                    <span>
+                        Running an effective local fellowship with kingdom
+                        excellence
+                    </span>
+                </label>
+            </div>
+
+        </div>
+
+        <div
+            class="footer"
+            data-html2canvas-ignore="true"
+        >
+            <button
+                type="button"
+                class="submit-btn"
+                onclick="generatePDF()"
+            >
+                Download as PDF
+            </button>
+        </div>
+
+    </div>
 </div>
 
 <script>
-    // --- SIGNATURE PAD CODE ---
-    const canvas = document.getElementById('signature-pad');
-    const ctx = canvas.getContext('2d');
+    const canvas = document.getElementById("signature-pad");
+    const context = canvas.getContext("2d");
+
     let isDrawing = false;
 
-    ctx.lineWidth = 2;
-    ctx.lineCap = 'round';
-    ctx.strokeStyle = '#000';
+    context.lineWidth = 4;
+    context.lineCap = "round";
+    context.lineJoin = "round";
+    context.strokeStyle = "#000000";
 
-    function getPosition(canvas, event) {
-        const rect = canvas.getBoundingClientRect();
-        const clientX = event.clientX || (event.touches && event.touches[0].clientX);
-        const clientY = event.clientY || (event.touches && event.touches[0].clientY);
+    function getCanvasPosition(event) {
+        const rectangle = canvas.getBoundingClientRect();
+
+        const point = event.touches
+            ? event.touches[0]
+            : event;
+
         return {
-            x: (clientX - rect.left) * (canvas.width / rect.width),
-            y: (clientY - rect.top) * (canvas.height / rect.height)
+            x:
+                (point.clientX - rectangle.left) *
+                (canvas.width / rectangle.width),
+
+            y:
+                (point.clientY - rectangle.top) *
+                (canvas.height / rectangle.height)
         };
     }
 
-    canvas.addEventListener('mousedown', (e) => { isDrawing = true; const pos = getPosition(canvas, e); ctx.beginPath(); ctx.moveTo(pos.x, pos.y); });
-    canvas.addEventListener('mousemove', (e) => { if (!isDrawing) return; const pos = getPosition(canvas, e); ctx.lineTo(pos.x, pos.y); ctx.stroke(); });
-    canvas.addEventListener('mouseup', () => isDrawing = false);
-    canvas.addEventListener('mouseout', () => isDrawing = false);
+    function startDrawing(event) {
+        event.preventDefault();
 
-    canvas.addEventListener('touchstart', (e) => { e.preventDefault(); isDrawing = true; const pos = getPosition(canvas, e); ctx.beginPath(); ctx.moveTo(pos.x, pos.y); }, { passive: false });
-    canvas.addEventListener('touchmove', (e) => { e.preventDefault(); if (!isDrawing) return; const pos = getPosition(canvas, e); ctx.lineTo(pos.x, pos.y); ctx.stroke(); }, { passive: false });
-    canvas.addEventListener('touchend', (e) => { e.preventDefault(); isDrawing = false; }, { passive: false });
+        isDrawing = true;
+
+        const position = getCanvasPosition(event);
+
+        context.beginPath();
+        context.moveTo(position.x, position.y);
+    }
+
+    function draw(event) {
+        if (!isDrawing) {
+            return;
+        }
+
+        event.preventDefault();
+
+        const position = getCanvasPosition(event);
+
+        context.lineTo(position.x, position.y);
+        context.stroke();
+    }
+
+    function stopDrawing(event) {
+        if (event) {
+            event.preventDefault();
+        }
+
+        isDrawing = false;
+        context.closePath();
+    }
+
+    canvas.addEventListener("mousedown", startDrawing);
+    canvas.addEventListener("mousemove", draw);
+    canvas.addEventListener("mouseup", stopDrawing);
+    canvas.addEventListener("mouseleave", stopDrawing);
+
+    canvas.addEventListener(
+        "touchstart",
+        startDrawing,
+        { passive: false }
+    );
+
+    canvas.addEventListener(
+        "touchmove",
+        draw,
+        { passive: false }
+    );
+
+    canvas.addEventListener(
+        "touchend",
+        stopDrawing,
+        { passive: false }
+    );
+
+    canvas.addEventListener(
+        "touchcancel",
+        stopDrawing,
+        { passive: false }
+    );
 
     function clearSignature() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        context.clearRect(
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        );
     }
 
-    // --- PDF GENERATION CODE ---
-    function generatePDF() {
-        const element = document.getElementById('form-content');
-        const btn = document.querySelector('.submit-btn');
-        const originalText = btn.innerText;
-        
-        btn.innerText = "Generating PDF...";
-        window.scrollTo(0, 0);
+    function isIOSDevice() {
+        return (
+            /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+            (
+                navigator.platform === "MacIntel" &&
+                navigator.maxTouchPoints > 1
+            )
+        );
+    }
 
-        const allTextInputs = document.querySelectorAll('.table-input, .input-name, .table-select');
-        allTextInputs.forEach(input => { input.style.fontSize = '11px'; });
+    function synchroniseFormValues(source, clone) {
+        const sourceFields = source.querySelectorAll(
+            "input, select, textarea"
+        );
 
-        const opt = {
-            margin:       0.3, 
-            filename:     'Convention_Registration.pdf',
-            image:        { type: 'jpeg', quality: 1 },
-            html2canvas:  { 
-                scale: 2, 
+        const clonedFields = clone.querySelectorAll(
+            "input, select, textarea"
+        );
+
+        sourceFields.forEach((field, index) => {
+            const clonedField = clonedFields[index];
+
+            if (!clonedField) {
+                return;
+            }
+
+            if (
+                field.type === "radio" ||
+                field.type === "checkbox"
+            ) {
+                clonedField.checked = field.checked;
+
+                if (field.checked) {
+                    clonedField.setAttribute("checked", "checked");
+                } else {
+                    clonedField.removeAttribute("checked");
+                }
+            } else if (field.tagName === "SELECT") {
+                clonedField.value = field.value;
+
+                Array.from(clonedField.options).forEach(option => {
+                    option.selected =
+                        option.value === field.value;
+                });
+            } else {
+                clonedField.value = field.value;
+                clonedField.setAttribute("value", field.value);
+
+                if (field.tagName === "TEXTAREA") {
+                    clonedField.textContent = field.value;
+                }
+            }
+        });
+
+        const sourceCanvas =
+            source.querySelector("#signature-pad");
+
+        const clonedCanvas =
+            clone.querySelector("#signature-pad");
+
+        if (sourceCanvas && clonedCanvas) {
+            const clonedContext =
+                clonedCanvas.getContext("2d");
+
+            clonedContext.drawImage(
+                sourceCanvas,
+                0,
+                0,
+                clonedCanvas.width,
+                clonedCanvas.height
+            );
+        }
+    }
+
+    async function generatePDF() {
+        const source =
+            document.getElementById("form-content");
+
+        const wrapper =
+            document.getElementById("form-wrapper");
+
+        const button =
+            document.querySelector(".submit-btn");
+
+        const originalButtonText =
+            button.textContent;
+
+        button.disabled = true;
+        button.textContent = "Generating PDF...";
+
+        window.scrollTo({
+            top: 0,
+            left: 0,
+            behavior: "instant"
+        });
+
+        const printableCopy =
+            source.cloneNode(true);
+
+        printableCopy.id = "printable-form-copy";
+
+        synchroniseFormValues(
+            source,
+            printableCopy
+        );
+
+        const temporaryWrapper =
+            document.createElement("div");
+
+        temporaryWrapper.className =
+            "form-wrapper pdf-mode";
+
+        temporaryWrapper.style.position =
+            "fixed";
+
+        temporaryWrapper.style.left =
+            "-10000px";
+
+        temporaryWrapper.style.top =
+            "0";
+
+        temporaryWrapper.style.backgroundColor =
+            "#ffffff";
+
+        temporaryWrapper.appendChild(
+            printableCopy
+        );
+
+        document.body.appendChild(
+            temporaryWrapper
+        );
+
+        const options = {
+            margin: [
+                7,
+                7,
+                7,
+                7
+            ],
+
+            filename:
+                "Convention_Registration.pdf",
+
+            image: {
+                type: "jpeg",
+                quality: 0.98
+            },
+
+            html2canvas: {
+                scale: 2,
+                useCORS: true,
+                allowTaint: false,
+                backgroundColor: "#ffffff",
                 scrollX: 0,
                 scrollY: 0,
-                windowWidth: 850 
+                windowWidth: 850,
+                logging: false
             },
-            jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' },
-            pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
+
+            jsPDF: {
+                unit: "mm",
+                format: "a4",
+                orientation: "portrait"
+            },
+
+            pagebreak: {
+                mode: [
+                    "css",
+                    "legacy"
+                ],
+                avoid: [
+                    "tr",
+                    ".seminar-section",
+                    ".signature-wrapper"
+                ]
+            }
         };
 
-        html2pdf().set(opt).from(element).save().then(() => {
-            allTextInputs.forEach(input => { input.style.fontSize = ''; });
-            btn.innerText = originalText;
-        });
+        try {
+            const worker = html2pdf()
+                .set(options)
+                .from(printableCopy);
+
+            const pdfBlob =
+                await worker.outputPdf("blob");
+
+            const pdfUrl =
+                URL.createObjectURL(pdfBlob);
+
+            if (isIOSDevice()) {
+                const openedWindow =
+                    window.open(
+                        pdfUrl,
+                        "_blank"
+                    );
+
+                if (!openedWindow) {
+                    window.location.href =
+                        pdfUrl;
+                }
+
+                setTimeout(() => {
+                    URL.revokeObjectURL(pdfUrl);
+                }, 60000);
+            } else {
+                const downloadLink =
+                    document.createElement("a");
+
+                downloadLink.href =
+                    pdfUrl;
+
+                downloadLink.download =
+                    options.filename;
+
+                downloadLink.style.display =
+                    "none";
+
+                document.body.appendChild(
+                    downloadLink
+                );
+
+                downloadLink.click();
+                downloadLink.remove();
+
+                setTimeout(() => {
+                    URL.revokeObjectURL(pdfUrl);
+                }, 15000);
+            }
+        } catch (error) {
+            console.error(
+                "PDF generation failed:",
+                error
+            );
+
+            alert(
+                "The PDF could not be generated. " +
+                "Please open the form in Chrome, Edge, Safari, or Firefox and try again."
+            );
+        } finally {
+            temporaryWrapper.remove();
+
+            wrapper.classList.remove(
+                "pdf-mode"
+            );
+
+            button.disabled = false;
+            button.textContent =
+                originalButtonText;
+        }
     }
 </script>
 
