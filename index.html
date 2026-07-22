@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convention Registration Commitment</title>
+    
+    <!-- This is the library that turns the web page into a PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e5e5e5;
+            display: flex; 
+            justify-content: center;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .form-container {
+            background-color: white;
+            width: 100%;
+            max-width: 850px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            box-sizing: border-box;
+        }
+
+        /* --- PREVENT PAGE BREAK SLICING --- */
+        p, tr, .seminar-section, .header, h2 {
+            page-break-inside: avoid;
+        }
+
+        /* Header Styles */
+        .header {
+            background-color: #0000FF;
+            color: white;
+            padding: 20px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 26px;
+            font-weight: bold;
+        }
+        .header p {
+            margin: 5px 0 0;
+            font-size: 16px;
+            font-style: italic;
+            font-weight: bold;
+        }
+
+        /* Content Padding */
+        .content {
+            padding: 20px;
+            color: #222;
+        }
+
+        /* Typography & Headings */
+        h2.blue-heading {
+            color: #0000FF;
+            font-size: 18px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        h2.red-heading {
+            color: #FF0000;
+            font-size: 18px;
+            margin-top: 25px;
+            margin-bottom: 10px;
+        }
+        p {
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+        .bold-italic {
+            font-weight: bold;
+            font-style: italic;
+        }
+
+        /* Input Styles */
+        input[type="text"], 
+        input[type="date"], 
+        input[type="tel"], 
+        input[type="email"], 
+        select, 
+        textarea {
+            background-color: #f7f7f7;
+            border: 1px solid #bcbcbc;
+            border-radius: 4px;
+            padding: 6px 8px;
+            font-size: 14px;
+            color: #333;
+            font-family: Arial, sans-serif;
+            transition: border-color 0.2s ease, background-color 0.2s ease;
+            box-sizing: border-box;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: #839bc2;
+            background-color: #ffffff;
+            outline: none;
+        }
+
+        .input-name { width: 300px; max-width: 100%; }
+        .input-date { width: 140px; }
+
+        /* Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1.5px solid black;
+            margin-bottom: 20px;
+        }
+        td {
+            border: 1px solid black;
+            padding: 10px;
+            vertical-align: middle;
+            font-size: 14px;
+            width: 50%;
+        }
+        
+        .table-input, .table-select, .table-textarea {
+            width: calc(100% - 125px); 
+            float: right;
+            box-sizing: border-box;
+        }
+        .table-textarea {
+            height: 44px;
+            resize: none;
+        }
+        .label-text {
+            display: inline-block;
+            width: 120px; 
+            margin-top: 5px;
+        }
+
+        /* Radio buttons inside table */
+        .radio-group {
+            display: inline-block;
+            float: right;
+            width: calc(100% - 125px);
+            margin-top: 6px;
+        }
+
+        /* Seminar Selection Section */
+        .seminar-section {
+            margin-bottom: 15px;
+        }
+        .seminar-day {
+            color: #FF0000;
+            font-weight: bold;
+            margin-top: 15px;
+            margin-bottom: 5px;
+        }
+        .seminar-option {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 6px;
+            margin-left: 20px;
+            cursor: pointer;
+        }
+        .seminar-option input[type="radio"] {
+            margin-right: 10px;
+            margin-top: 4px;
+            transform: scale(1.2);
+            cursor: pointer;
+        }
+
+        /* Signature Section Layout */
+        .signature-wrapper {
+            display: flex; 
+            align-items: center; 
+            margin-bottom: 10px; 
+            margin-top: 15px; 
+            page-break-inside: avoid; 
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        #signature-pad {
+            border: 1px solid #bcbcbc;
+            border-radius: 4px;
+            background-color: #f7f7f7;
+            cursor: crosshair;
+            touch-action: none; /* Prevents scrolling while signing on mobile */
+        }
+
+        /* Footer / Download Button */
+        .footer {
+            background-color: #0000FF;
+            text-align: center;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        .submit-btn {
+            background-color: white;
+            color: black;
+            border: 1px solid #333;
+            padding: 10px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .submit-btn:hover {
+            background-color: #e0e0e0;
+        }
+
+        /* ========================================================
+           MOBILE RESPONSIVENESS (Phones & Small Tablets)
+           ======================================================== */
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            .content { padding: 15px; }
+            
+            /* Stacks table columns vertically on small screens */
+            table, tbody, tr, td {
+                display: block;
+                width: 100%;
+            }
+            td { border-bottom: none; }
+            tr { border-bottom: 1px solid black; }
+            tr:last-child { border-bottom: none; }
+
+            /* Fixes input sizing so they don't overflow on mobile */
+            .table-input, .table-select, .table-textarea, .radio-group {
+                width: 100%;
+                float: none;
+                margin-top: 5px;
+            }
+            .label-text {
+                display: block;
+                width: 100%;
+            }
+            
+            /* Signature layout for phones */
+            .signature-wrapper {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="form-container" id="form-content">
+    
+    <!-- Header -->
+    <div class="header">
+        <h1>Convention Registration Commitment &ndash;</h1>
+        <p>Cut this section and share with your Fellowship Coordinator</p>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+        
+        <!-- Declaration Section -->
+        <h2 class="blue-heading">Declaration</h2>
+        <p>I, <input type="text" class="input-name" id="decl-name">, commit to preparing intentionally for Convention 2026.<br>
+        I agree to abide by all camp rules and to submit myself fully to the spiritual discipline required throughout the Convention. I come with a sincere heart, committing myself to become part of the revival army God is raising. I yield to His sure Word, the move of His Spirit, and every divine instruction that will cause dry bones to rise as an exceeding great army, as the Lord helps me, in Jesus' name.<br>
+        I confirm that I am an active TACEF member who consistently attends and serves in my local fellowship, or I am currently on youth service, or working outside my base, or married outside the ministry, and remain connected to the vision on a regular basis.</p>
+        
+        <!-- Signature Area -->
+        <div class="signature-wrapper">
+            <span>Signature:</span>
+            <canvas id="signature-pad" width="250" height="40"></canvas>
+            <button type="button" onclick="clearSignature()" data-html2canvas-ignore="true" style="padding: 4px 8px; font-size: 12px; cursor: pointer; border-radius: 4px; border: 1px solid #bcbcbc;">Clear</button>
+            <span style="margin-left: 10px;">Date:</span>
+            <input type="date" class="input-date">
+        </div>
+        
+        <p class="bold-italic">Where applicable, this declaration has been read and explained to me in my local language</p>
+
+        <!-- Details to fill -->
+        <h2 class="red-heading">Details to fill</h2>
+        <table>
+            <tr>
+                <td>
+                    <span class="label-text">&bull; Full Name</span> 
+                    <input type="text" class="table-input">
+                </td>
+                <td>
+                    <span class="label-text">&bull; Zone</span> 
+                    <input type="text" class="table-input">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span class="label-text">&bull; Gender</span> 
+                    <div class="radio-group">
+                        <label><input type="radio" name="gender" value="male"> Male</label>
+                        <label style="margin-left: 10px;"><input type="radio" name="gender" value="female"> Female</label>
+                    </div>
+                </td>
+                <td>
+                    <span class="label-text">&bull; Phone Number</span> 
+                    <input type="tel" class="table-input">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span class="label-text">&bull; Age Category:</span> 
+                    <select class="table-select">
+                        <option value="">Adult, Teen, or Child</option>
+                        <option value="adult">Adult</option>
+                        <option value="teen">Teen</option>
+                        <option value="child">Child</option>
+                    </select>
+                </td>
+                <td>
+                    <span class="label-text">&bull; Email Address <span style="font-size:12px;">(Optional)</span></span> 
+                    <input type="email" class="table-input">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span class="label-text">&bull; Manual Preference:</span> 
+                    <select class="table-select">
+                        <option value="">English / Yoruba / Seed of Purpose / Digital</option>
+                        <option value="english">English</option>
+                        <option value="yoruba">Yoruba</option>
+                        <option value="seed">Seed of Purpose</option>
+                        <option value="digital">Digital Copy</option>
+                    </select>
+                </td>
+                <td>
+                    <span class="label-text">&bull; Emergency Contact</span> 
+                    <input type="text" class="table-input">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span class="label-text">&bull; Fellowship Name</span> 
+                    <input type="text" class="table-input">
+                </td>
+                <td style="background-color: #f8f9fb;">
+                    <span class="label-text">&bull; Health Considerations<br><span style="font-size:12px; margin-left:10px;">(Optional)</span></span> 
+                    <textarea class="table-textarea" placeholder="(Optional)"></textarea>
+                </td>
+            </tr>
+        </table>
+
+        <!-- Seminar Selection -->
+        <div style="page-break-inside: avoid;">
+            <h2 class="blue-heading">Seminar Selection Framework</h2>
+            <p>Participants should prayerfully and honestly select seminars that address their most urgent spiritual and life needs.</p>
+            <p>Please use a pen to tick your preferred seminar for each of the three days. You can only select one seminar per day</p>
+        </div>
+
+        <!-- Thursday -->
+        <div class="seminar-section">
+            <div class="seminar-day">Thursday: Discipleship Foundations</div>
+            <label class="seminar-option">
+                <input type="radio" name="thursday">
+                <span>Assurance of Salvation: What if I am not sure that I am truly born again?</span>
+            </label>
+            <label class="seminar-option">
+                <input type="radio" name="thursday">
+                <span>Building and maintaining a disciplined daily walk with God through consistent quiet time</span>
+            </label>
+            <label class="seminar-option">
+                <input type="radio" name="thursday">
+                <span>Becoming God's trusted discipler and builder of men</span>
+            </label>
+            <label class="seminar-option">
+                <input type="radio" name="thursday">
+                <span>Raising godly children through children's ministry and Sunday school outreach</span>
+            </label>
+            <label class="seminar-option">
+                <input type="radio" name="thursday">
+                <span>Turning the altar into a platform for sustained revival: a charge for clergy, evangelists, youth church coordinators and lay readers.</span>
+            </label>
+        </div>
+
+        <!-- Friday -->
+        <div class="seminar-section">
+            <div class="seminar-day">Friday: Life, Career, and Personal Development</div>
+            <label class="seminar-option">
+                <input type="radio" name="friday">
+                <span>Knowing the will of God for life, career, and marriage</span>
+            </label>
+            <label class="seminar-option">
+                <input type="radio" name="friday">
+                <span>Pursuing academic excellence as a Christian student</span>
+            </label>
+            <label class="seminar-option">
+                <input type="radio" name="friday">
+                <span>Managing personal and family finances with godly wisdom</span>
+            </label>
+            <label class="seminar-option">
+                <input type="radio" name="friday">
+                <span>Growing in personal, professional, business, and career effectiveness</span>
+            </label>
+        </div>
+
+        <!-- Saturday -->
+        <div class="seminar-section">
+            <div class="seminar-day">Saturday: Ministry and Service</div>
+            <label class="seminar-option">
+                <input type="radio" name="saturday">
+                <span>Standing as a revival intercessor in the local church</span>
+            </label>
+            <label class="seminar-option">
+                <input type="radio" name="saturday">
+                <span>Discovering and developing ministry gifts</span>
+            </label>
+            <label class="seminar-option">
+                <input type="radio" name="saturday">
+                <span>Managing church dynamics and administration with excellence</span>
+            </label>
+            <label class="seminar-option">
+                <input type="radio" name="saturday">
+                <span>Running an effective local fellowship with kingdom excellence</span>
+            </label>
+        </div>
+
+    </div>
+
+    <!-- Footer Download Button -->
+    <div class="footer" data-html2canvas-ignore="true">
+        <button type="button" class="submit-btn" onclick="generatePDF()">Download as PDF</button>
+    </div>
+
+</div>
+
+<script>
+    // --- SIGNATURE PAD CODE ---
+    const canvas = document.getElementById('signature-pad');
+    const ctx = canvas.getContext('2d');
+    let isDrawing = false;
+
+    ctx.lineWidth = 2;
+    ctx.lineCap = 'round';
+    ctx.strokeStyle = '#000';
+
+    function getPosition(canvas, event) {
+        const rect = canvas.getBoundingClientRect();
+        const clientX = event.clientX || (event.touches && event.touches[0].clientX);
+        const clientY = event.clientY || (event.touches && event.touches[0].clientY);
+        
+        return {
+            x: (clientX - rect.left) * (canvas.width / rect.width),
+            y: (clientY - rect.top) * (canvas.height / rect.height)
+        };
+    }
+
+    // Mouse Event Handlers (Laptops/Desktops)
+    canvas.addEventListener('mousedown', (e) => {
+        isDrawing = true;
+        const pos = getPosition(canvas, e);
+        ctx.beginPath();
+        ctx.moveTo(pos.x, pos.y);
+    });
+
+    canvas.addEventListener('mousemove', (e) => {
+        if (!isDrawing) return;
+        const pos = getPosition(canvas, e);
+        ctx.lineTo(pos.x, pos.y);
+        ctx.stroke();
+    });
+
+    canvas.addEventListener('mouseup', () => isDrawing = false);
+    canvas.addEventListener('mouseout', () => isDrawing = false);
+
+    // Touch Event Handlers (Phones & Touch Laptops)
+    canvas.addEventListener('touchstart', (e) => {
+        e.preventDefault(); // Stop screen from scrolling
+        isDrawing = true;
+        const pos = getPosition(canvas, e);
+        ctx.beginPath();
+        ctx.moveTo(pos.x, pos.y);
+    }, { passive: false });
+
+    canvas.addEventListener('touchmove', (e) => {
+        e.preventDefault(); // Stop screen from scrolling
+        if (!isDrawing) return;
+        const pos = getPosition(canvas, e);
+        ctx.lineTo(pos.x, pos.y);
+        ctx.stroke();
+    }, { passive: false });
+
+    canvas.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        isDrawing = false;
+    }, { passive: false });
+
+    function clearSignature() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    // --- PDF GENERATION CODE ---
+    function generatePDF() {
+        const element = document.getElementById('form-content');
+        const btn = document.querySelector('.submit-btn');
+        const originalText = btn.innerText;
+        
+        btn.innerText = "Generating PDF...";
+
+        // Temporarily change layout for proper PDF capturing
+        document.body.style.display = 'block';
+        element.style.margin = '0 auto'; 
+        element.style.boxShadow = 'none';
+
+        // Shrink text temporarily so long emails don't get cut off in the PDF
+        const allTextInputs = document.querySelectorAll('.table-input, .input-name');
+        allTextInputs.forEach(input => {
+            input.style.fontSize = '11px'; 
+        });
+
+        const opt = {
+            margin:       0.3, 
+            filename:     'Convention_Registration.pdf',
+            image:        { type: 'jpeg', quality: 1 },
+            html2canvas:  { 
+                scale: 2, 
+                scrollY: 0,
+                scrollX: 0,
+                windowWidth: 850 // Forces Desktop view in PDF, even if downloaded on mobile
+            },
+            jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' },
+            pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
+        };
+
+        // Create the PDF
+        html2pdf().set(opt).from(element).save().then(() => {
+            // Restore normal look after downloading
+            btn.innerText = originalText;
+            document.body.style.display = 'flex';
+            element.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+            
+            allTextInputs.forEach(input => {
+                input.style.fontSize = ''; 
+            });
+        });
+    }
+</script>
+
+</body>
+</html>
