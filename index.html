@@ -9,22 +9,24 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
-        /* ========================================================
-           BASE STYLES (Desktop & Tablet)
-           ======================================================== */
         body {
             font-family: Arial, sans-serif;
             background-color: #e5e5e5;
             display: flex; 
             justify-content: center;
             margin: 0;
-            padding: 20px;
+            padding: 10px;
+        }
+
+        /* Forces a strict desktop container width so mobile screens never clip the PDF */
+        .form-wrapper {
+            width: 850px;
+            min-width: 850px;
         }
 
         .form-container {
             background-color: white;
-            width: 100%;
-            max-width: 850px;
+            width: 850px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             box-sizing: border-box;
         }
@@ -90,7 +92,7 @@
             font-family: Arial, sans-serif;
             box-sizing: border-box;
         }
-        .input-name { width: 300px; max-width: 100%; }
+        .input-name { width: 300px; }
         .input-date { width: 140px; }
 
         /* Tables */
@@ -182,203 +184,190 @@
             cursor: pointer;
             border-radius: 4px;
         }
-
-        /* ========================================================
-           MOBILE RESPONSIVENESS (Phones & Small Tablets)
-           ======================================================== */
-        @media (max-width: 768px) {
-            body { padding: 10px; }
-            .content { padding: 15px; }
-            table, tbody, tr, td { display: block; width: 100%; }
-            td { border-bottom: none; width: 100% !important; }
-            tr { border-bottom: 1px solid black; }
-            tr:last-child { border-bottom: none; }
-            .table-input, .table-select, .table-textarea, .radio-group { width: 100%; float: none; margin-top: 5px; }
-            .label-text { display: block; width: 100%; }
-            .signature-wrapper { flex-direction: column; align-items: flex-start; }
-        }
     </style>
 </head>
 <body>
 
-<div class="form-container" id="form-content">
-    
-    <!-- Header -->
-    <div class="header">
-        <h1>Convention Registration Commitment &ndash;</h1>
-        <p>Cut this section and share with your Fellowship Coordinator</p>
-    </div>
+<div class="form-wrapper">
+  <div class="form-container" id="form-content">
+      
+      <!-- Header -->
+      <div class="header">
+          <h1>Convention Registration Commitment &ndash;</h1>
+          <p>Cut this section and share with your Fellowship Coordinator</p>
+      </div>
 
-    <!-- Main Content -->
-    <div class="content">
-        
-        <!-- Declaration Section -->
-        <h2 class="blue-heading">Declaration</h2>
-        <p>I, <input type="text" class="input-name" id="decl-name">, commit to preparing intentionally for Convention 2026.<br>
-        I agree to abide by all camp rules and to submit myself fully to the spiritual discipline required throughout the Convention. I come with a sincere heart, committing myself to become part of the revival army God is raising. I yield to His sure Word, the move of His Spirit, and every divine instruction that will cause dry bones to rise as an exceeding great army, as the Lord helps me, in Jesus' name.<br>
-        I confirm that I am an active TACEF member who consistently attends and serves in my local fellowship, or I am currently on youth service, or working outside my base, or married outside the ministry, and remain connected to the vision on a regular basis.</p>
-        
-        <!-- Signature Area -->
-        <div class="signature-wrapper">
-            <span>Signature:</span>
-            <canvas id="signature-pad" width="250" height="40"></canvas>
-            <button type="button" onclick="clearSignature()" data-html2canvas-ignore="true" style="padding: 4px 8px; font-size: 12px; cursor: pointer; border-radius: 4px; border: 1px solid #bcbcbc;">Clear</button>
-            <span style="margin-left: 10px;">Date:</span>
-            <input type="date" class="input-date">
-        </div>
-        
-        <p class="bold-italic">Where applicable, this declaration has been read and explained to me in my local language</p>
+      <!-- Main Content -->
+      <div class="content">
+          
+          <!-- Declaration Section -->
+          <h2 class="blue-heading">Declaration</h2>
+          <p>I, <input type="text" class="input-name" id="decl-name">, commit to preparing intentionally for Convention 2026.<br>
+          I agree to abide by all camp rules and to submit myself fully to the spiritual discipline required throughout the Convention. I come with a sincere heart, committing myself to become part of the revival army God is raising. I yield to His sure Word, the move of His Spirit, and every divine instruction that will cause dry bones to rise as an exceeding great army, as the Lord helps me, in Jesus' name.<br>
+          I confirm that I am an active TACEF member who consistently attends and serves in my local fellowship, or I am currently on youth service, or working outside my base, or married outside the ministry, and remain connected to the vision on a regular basis.</p>
+          
+          <!-- Signature Area -->
+          <div class="signature-wrapper">
+              <span>Signature:</span>
+              <canvas id="signature-pad" width="250" height="40"></canvas>
+              <button type="button" onclick="clearSignature()" data-html2canvas-ignore="true" style="padding: 4px 8px; font-size: 12px; cursor: pointer; border-radius: 4px; border: 1px solid #bcbcbc;">Clear</button>
+              <span style="margin-left: 10px;">Date:</span>
+              <input type="date" class="input-date">
+          </div>
+          
+          <p class="bold-italic">Where applicable, this declaration has been read and explained to me in my local language</p>
 
-        <!-- Details to fill -->
-        <h2 class="red-heading">Details to fill</h2>
-        <table>
-            <tr>
-                <td>
-                    <span class="label-text">&bull; Full Name</span> 
-                    <input type="text" class="table-input">
-                </td>
-                <td>
-                    <span class="label-text">&bull; Zone</span> 
-                    <input type="text" class="table-input">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <span class="label-text">&bull; Gender</span> 
-                    <div class="radio-group">
-                        <label><input type="radio" name="gender" value="male"> Male</label>
-                        <label style="margin-left: 10px;"><input type="radio" name="gender" value="female"> Female</label>
-                    </div>
-                </td>
-                <td>
-                    <span class="label-text">&bull; Phone Number</span> 
-                    <input type="tel" class="table-input">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <span class="label-text">&bull; Age Category:</span> 
-                    <select class="table-select">
-                        <option value="">Adult, Teen, or Child</option>
-                        <option value="adult">Adult</option>
-                        <option value="teen">Teen</option>
-                        <option value="child">Child</option>
-                    </select>
-                </td>
-                <td>
-                    <span class="label-text">&bull; Email Address <span style="font-size:12px;">(Optional)</span></span> 
-                    <input type="email" class="table-input">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <span class="label-text">&bull; Manual Preference:</span> 
-                    <select class="table-select">
-                        <option value="">English / Yoruba / Seed of Purpose / Digital</option>
-                        <option value="english">English</option>
-                        <option value="yoruba">Yoruba</option>
-                        <option value="seed">Seed of Purpose</option>
-                        <option value="digital">Digital Copy</option>
-                    </select>
-                </td>
-                <td>
-                    <span class="label-text">&bull; Emergency Contact</span> 
-                    <input type="text" class="table-input">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <span class="label-text">&bull; Fellowship Name</span> 
-                    <input type="text" class="table-input">
-                </td>
-                <td style="background-color: #f8f9fb;">
-                    <span class="label-text">&bull; Health Considerations<br><span style="font-size:12px; margin-left:10px;">(Optional)</span></span> 
-                    <textarea class="table-textarea" placeholder="(Optional)"></textarea>
-                </td>
-            </tr>
-        </table>
+          <!-- Details to fill -->
+          <h2 class="red-heading">Details to fill</h2>
+          <table>
+              <tr>
+                  <td>
+                      <span class="label-text">&bull; Full Name</span> 
+                      <input type="text" class="table-input">
+                  </td>
+                  <td>
+                      <span class="label-text">&bull; Zone</span> 
+                      <input type="text" class="table-input">
+                  </td>
+              </tr>
+              <tr>
+                  <td>
+                      <span class="label-text">&bull; Gender</span> 
+                      <div class="radio-group">
+                          <label><input type="radio" name="gender" value="male"> Male</label>
+                          <label style="margin-left: 10px;"><input type="radio" name="gender" value="female"> Female</label>
+                      </div>
+                  </td>
+                  <td>
+                      <span class="label-text">&bull; Phone Number</span> 
+                      <input type="tel" class="table-input">
+                  </td>
+              </tr>
+              <tr>
+                  <td>
+                      <span class="label-text">&bull; Age Category:</span> 
+                      <select class="table-select">
+                          <option value="">Adult, Teen, or Child</option>
+                          <option value="adult">Adult</option>
+                          <option value="teen">Teen</option>
+                          <option value="child">Child</option>
+                      </select>
+                  </td>
+                  <td>
+                      <span class="label-text">&bull; Email Address <span style="font-size:12px;">(Optional)</span></span> 
+                      <input type="email" class="table-input">
+                  </td>
+              </tr>
+              <tr>
+                  <td>
+                      <span class="label-text">&bull; Manual Preference:</span> 
+                      <select class="table-select">
+                          <option value="">English / Yoruba / Seed of Purpose / Digital</option>
+                          <option value="english">English</option>
+                          <option value="yoruba">Yoruba</option>
+                          <option value="seed">Seed of Purpose</option>
+                          <option value="digital">Digital Copy</option>
+                      </select>
+                  </td>
+                  <td>
+                      <span class="label-text">&bull; Emergency Contact</span> 
+                      <input type="text" class="table-input">
+                  </td>
+              </tr>
+              <tr>
+                  <td>
+                      <span class="label-text">&bull; Fellowship Name</span> 
+                      <input type="text" class="table-input">
+                  </td>
+                  <td style="background-color: #f8f9fb;">
+                      <span class="label-text">&bull; Health Considerations<br><span style="font-size:12px; margin-left:10px;">(Optional)</span></span> 
+                      <textarea class="table-textarea" placeholder="(Optional)"></textarea>
+                  </td>
+              </tr>
+          </table>
 
-        <!-- Seminar Selection -->
-        <div style="page-break-inside: avoid;">
-            <h2 class="blue-heading">Seminar Selection Framework</h2>
-            <p>Participants should prayerfully and honestly select seminars that address their most urgent spiritual and life needs.</p>
-            <p>Please use a pen to tick your preferred seminar for each of the three days. You can only select one seminar per day</p>
-        </div>
+          <!-- Seminar Selection -->
+          <div style="page-break-inside: avoid;">
+              <h2 class="blue-heading">Seminar Selection Framework</h2>
+              <p>Participants should prayerfully and honestly select seminars that address their most urgent spiritual and life needs.</p>
+              <p>Please use a pen to tick your preferred seminar for each of the three days. You can only select one seminar per day</p>
+          </div>
 
-        <!-- Thursday -->
-        <div class="seminar-section">
-            <div class="seminar-day">Thursday: Discipleship Foundations</div>
-            <label class="seminar-option">
-                <input type="radio" name="thursday">
-                <span>Assurance of Salvation: What if I am not sure that I am truly born again?</span>
-            </label>
-            <label class="seminar-option">
-                <input type="radio" name="thursday">
-                <span>Building and maintaining a disciplined daily walk with God through consistent quiet time</span>
-            </label>
-            <label class="seminar-option">
-                <input type="radio" name="thursday">
-                <span>Becoming God's trusted discipler and builder of men</span>
-            </label>
-            <label class="seminar-option">
-                <input type="radio" name="thursday">
-                <span>Raising godly children through children's ministry and Sunday school outreach</span>
-            </label>
-            <label class="seminar-option">
-                <input type="radio" name="thursday">
-                <span>Turning the altar into a platform for sustained revival: a charge for clergy, evangelists, youth church coordinators and lay readers.</span>
-            </label>
-        </div>
+          <!-- Thursday -->
+          <div class="seminar-section">
+              <div class="seminar-day">Thursday: Discipleship Foundations</div>
+              <label class="seminar-option">
+                  <input type="radio" name="thursday">
+                  <span>Assurance of Salvation: What if I am not sure that I am truly born again?</span>
+              </label>
+              <label class="seminar-option">
+                  <input type="radio" name="thursday">
+                  <span>Building and maintaining a disciplined daily walk with God through consistent quiet time</span>
+              </label>
+              <label class="seminar-option">
+                  <input type="radio" name="thursday">
+                  <span>Becoming God's trusted discipler and builder of men</span>
+              </label>
+              <label class="seminar-option">
+                  <input type="radio" name="thursday">
+                  <span>Raising godly children through children's ministry and Sunday school outreach</span>
+              </label>
+              <label class="seminar-option">
+                  <input type="radio" name="thursday">
+                  <span>Turning the altar into a platform for sustained revival: a charge for clergy, evangelists, youth church coordinators and lay readers.</span>
+              </label>
+          </div>
 
-        <!-- Friday -->
-        <div class="seminar-section">
-            <div class="seminar-day">Friday: Life, Career, and Personal Development</div>
-            <label class="seminar-option">
-                <input type="radio" name="friday">
-                <span>Knowing the will of God for life, career, and marriage</span>
-            </label>
-            <label class="seminar-option">
-                <input type="radio" name="friday">
-                <span>Pursuing academic excellence as a Christian student</span>
-            </label>
-            <label class="seminar-option">
-                <input type="radio" name="friday">
-                <span>Managing personal and family finances with godly wisdom</span>
-            </label>
-            <label class="seminar-option">
-                <input type="radio" name="friday">
-                <span>Growing in personal, professional, business, and career effectiveness</span>
-            </label>
-        </div>
+          <!-- Friday -->
+          <div class="seminar-section">
+              <div class="seminar-day">Friday: Life, Career, and Personal Development</div>
+              <label class="seminar-option">
+                  <input type="radio" name="friday">
+                  <span>Knowing the will of God for life, career, and marriage</span>
+              </label>
+              <label class="seminar-option">
+                  <input type="radio" name="friday">
+                  <span>Pursuing academic excellence as a Christian student</span>
+              </label>
+              <label class="seminar-option">
+                  <input type="radio" name="friday">
+                  <span>Managing personal and family finances with godly wisdom</span>
+              </label>
+              <label class="seminar-option">
+                  <input type="radio" name="friday">
+                  <span>Growing in personal, professional, business, and career effectiveness</span>
+              </label>
+          </div>
 
-        <!-- Saturday -->
-        <div class="seminar-section">
-            <div class="seminar-day">Saturday: Ministry and Service</div>
-            <label class="seminar-option">
-                <input type="radio" name="saturday">
-                <span>Standing as a revival intercessor in the local church</span>
-            </label>
-            <label class="seminar-option">
-                <input type="radio" name="saturday">
-                <span>Discovering and developing ministry gifts</span>
-            </label>
-            <label class="seminar-option">
-                <input type="radio" name="saturday">
-                <span>Managing church dynamics and administration with excellence</span>
-            </label>
-            <label class="seminar-option">
-                <input type="radio" name="saturday">
-                <span>Running an effective local fellowship with kingdom excellence</span>
-            </label>
-        </div>
+          <!-- Saturday -->
+          <div class="seminar-section">
+              <div class="seminar-day">Saturday: Ministry and Service</div>
+              <label class="seminar-option">
+                  <input type="radio" name="saturday">
+                  <span>Standing as a revival intercessor in the local church</span>
+              </label>
+              <label class="seminar-option">
+                  <input type="radio" name="saturday">
+                  <span>Discovering and developing ministry gifts</span>
+              </label>
+              <label class="seminar-option">
+                  <input type="radio" name="saturday">
+                  <span>Managing church dynamics and administration with excellence</span>
+              </label>
+              <label class="seminar-option">
+                  <input type="radio" name="saturday">
+                  <span>Running an effective local fellowship with kingdom excellence</span>
+              </label>
+          </div>
 
-    </div>
+      </div>
 
-    <!-- Footer Download Button -->
-    <div class="footer" data-html2canvas-ignore="true">
-        <button type="button" class="submit-btn" onclick="generatePDF()">Download as PDF</button>
-    </div>
+      <!-- Footer Download Button -->
+      <div class="footer" data-html2canvas-ignore="true">
+          <button type="button" class="submit-btn" onclick="generatePDF()">Download as PDF</button>
+      </div>
 
+  </div>
 </div>
 
 <script>
@@ -414,31 +403,15 @@
         ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
 
-    // --- THE FIX: VIEWPORT OVERRIDE METHOD ---
+    // --- PDF GENERATION CODE ---
     function generatePDF() {
         const element = document.getElementById('form-content');
         const btn = document.querySelector('.submit-btn');
         const originalText = btn.innerText;
         
         btn.innerText = "Generating PDF...";
-
-        // 1. Force the mobile phone to render the page as a desktop monitor temporarily
-        const viewportMeta = document.querySelector('meta[name="viewport"]');
-        viewportMeta.setAttribute('content', 'width=850');
-        
-        // 2. Scroll to absolute top left
         window.scrollTo(0, 0);
 
-        // 3. Remove centering logic so it docks to the left
-        document.body.style.display = 'block';
-        document.body.style.margin = '0';
-        document.body.style.padding = '0';
-        element.style.margin = '0';
-        element.style.width = '800px';
-        element.style.maxWidth = '800px';
-        element.style.boxShadow = 'none';
-
-        // 4. Shrink inputs so nothing is cut off
         const allTextInputs = document.querySelectorAll('.table-input, .input-name, .table-select');
         allTextInputs.forEach(input => { input.style.fontSize = '11px'; });
 
@@ -456,24 +429,10 @@
             pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
         };
 
-        // Wait a half second (500ms) for the phone screen to actually resize, then capture
-        setTimeout(() => {
-            html2pdf().set(opt).from(element).save().then(() => {
-                
-                // 5. Instantly change everything back to normal for the user
-                viewportMeta.setAttribute('content', 'width=device-width, initial-scale=1.0');
-                document.body.style.display = '';
-                document.body.style.margin = '';
-                document.body.style.padding = '';
-                element.style.margin = '';
-                element.style.width = '100%';
-                element.style.maxWidth = '850px';
-                element.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
-                
-                allTextInputs.forEach(input => { input.style.fontSize = ''; });
-                btn.innerText = originalText;
-            });
-        }, 500); 
+        html2pdf().set(opt).from(element).save().then(() => {
+            allTextInputs.forEach(input => { input.style.fontSize = ''; });
+            btn.innerText = originalText;
+        });
     }
 </script>
 
